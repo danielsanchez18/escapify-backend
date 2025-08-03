@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class BranchMapper {
 
-    public BranchDTO toDTO(Branch branch) {
+    public BranchDTO toDTO (Branch branch) {
         BranchDTO dto = new BranchDTO();
         dto.setId(branch.getId());
         dto.setName(branch.getName());
@@ -29,7 +29,7 @@ public class BranchMapper {
         return dto;
     }
 
-    public Branch toEntity(BranchDTO dto) {
+    public Branch toEntity (BranchDTO dto) {
         Branch branch = new Branch();
         branch.setId(dto.getId());
         branch.setName(dto.getName());

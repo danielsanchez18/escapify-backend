@@ -120,6 +120,20 @@ public class BranchController {
         }
     }
 
+    @PutMapping("/change-status/{id}")
+    public ResponseEntity<?> changeStatus(@PathVariable UUID id) {
+        try {
+            BranchDTO updatedBranch = branchService.changeStatus(id);
+            return ResponseEntity.ok(ResponseUtil.successResponse("Estado de la sucursal cambiado exitosamente", updatedBranch));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ResponseUtil.errorResponse(ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ResponseUtil.errorResponse("Error al cambiar el estado de la sucursal"));
+        }
+    }
+
     @PutMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
         try {

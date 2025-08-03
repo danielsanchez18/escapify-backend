@@ -68,11 +68,14 @@ public class BranchValidator {
     5. Que el número de teléfono tenga un formato válido. */
 
     public void validateUpdate(UUID id, BranchDTO dto) {
+
         Branch branch = branchRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("La sucursal no existe o está eliminada."));
+            .orElseThrow(() -> new IllegalArgumentException("La sucursal con ese ID no existe."));
+
         if (Boolean.TRUE.equals(branch.getDeleted())) {
             throw new IllegalArgumentException("La sucursal está eliminada.");
         }
+
         if (!Boolean.TRUE.equals(branch.getEnabled())) {
             throw new IllegalArgumentException("La sucursal debe estar activa para ser actualizada.");
         }

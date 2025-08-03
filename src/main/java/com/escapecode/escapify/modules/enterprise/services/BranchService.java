@@ -33,6 +33,8 @@ public interface BranchService {
 
     BranchDTO update(UUID id, BranchDTO branchDTO, MultipartFile image) throws IOException;
 
+    BranchDTO changeStatus(UUID id);
+
     void delete(UUID id);
 
     void restore(UUID id);

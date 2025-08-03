@@ -47,4 +47,7 @@ public interface BranchRepository extends JpaRepository<Branch, UUID> {
     );
 
     Optional<Branch> findByNameAndCompanyIdAndDeletedFalse(String name, UUID companyId);
+
+    boolean existsByIdAndEnabledTrueAndDeletedFalse(UUID branchId);
+
 }

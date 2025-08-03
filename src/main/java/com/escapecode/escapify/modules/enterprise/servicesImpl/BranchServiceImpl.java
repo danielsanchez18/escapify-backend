@@ -127,6 +127,19 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
+    public BranchDTO changeStatus(UUID id) {
+        Branch existingBranch = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Sucursal no encontrada"));
+
+        if (existingBranch.getDeleted()) {
+            throw new IllegalArgumentException("No se puede cambiar el estado de una sucursal eliminada");
+        }
+
+        existingBranch.setEnabled(!existingBranch.getEnabled());
+        return mapper.toDTO(repository.save(existingBranch));
+    }
+
+    @Override
     public void delete(UUID id) {
         Branch existingBranch = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Sucursal no encontrada"));
