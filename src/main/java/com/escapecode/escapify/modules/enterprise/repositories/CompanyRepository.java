@@ -19,6 +19,8 @@ public interface CompanyRepository extends JpaRepository<Company, UUID> {
 
     Optional<Company> findByNameAndDeletedFalse(String name);
 
+    boolean existsByIdAndEnabledTrueAndDeletedFalse(UUID companyId);
+
     // Consulta de búsqueda dinámica
     @Query("SELECT c FROM Company c WHERE "
             + "(:name IS NULL OR c.name LIKE %:name%) "

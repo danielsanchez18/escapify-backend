@@ -8,8 +8,8 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "companies")
-public class Company {
+@Table(name = "branches")
+public class Branch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -18,22 +18,23 @@ public class Company {
     @Column(length = 100, nullable = false)
     private String name;
 
-    private String description;
-
-    @Column(length = 20, nullable = false)
-    private String tag;
-
     @Column(length = 20)
     private String phoneNumber;
 
-    @Column(length = 20)
+    @Column(length = 100, nullable = false)
+    private String address;
+
+    @Column(length = 20,  nullable = false)
+    private String city;
+
+    @Column(length = 20,  nullable = false)
     private String country;
 
-    @Column(length = 100)
-    private String email;
-
-    private String website;
     private String logoUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 
     @Column(nullable = false)
     private Boolean enabled = true;
@@ -45,3 +46,4 @@ public class Company {
     private Audit audit = new Audit();
 
 }
+
