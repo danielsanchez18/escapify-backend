@@ -109,6 +109,15 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public CompanyDTO changeStatus(UUID id) {
+        Company existingCompany = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Empresa no encontrada"));
+
+        existingCompany.setEnabled(!existingCompany.getEnabled());
+        return mapper.toDTO(repository.save(existingCompany));
+    }
+
+    @Override
     public void delete(UUID id) {
         Company existingCompany = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Empresa no encontrada"));

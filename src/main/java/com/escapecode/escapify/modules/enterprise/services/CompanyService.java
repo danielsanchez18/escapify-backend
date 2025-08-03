@@ -29,6 +29,8 @@ public interface CompanyService {
 
     CompanyDTO update(UUID id, CompanyDTO companyDTO, MultipartFile image) throws IOException;
 
+    CompanyDTO changeStatus(UUID id);
+
     void delete(UUID id);
 
     void restore(UUID id);

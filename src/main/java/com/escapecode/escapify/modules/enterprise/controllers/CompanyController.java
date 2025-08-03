@@ -105,6 +105,20 @@ public class CompanyController {
         }
     }
 
+    @PutMapping("/change-status/{id}")
+    public ResponseEntity<?> changeStatus(@PathVariable UUID id) {
+        try {
+            CompanyDTO updatedCompany = companyService.changeStatus(id);
+            return ResponseEntity.ok(ResponseUtil.successResponse("Estado de la empresa cambiado exitosamente", updatedCompany));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ResponseUtil.errorResponse(ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ResponseUtil.errorResponse("Error al cambiar el estado de la empresa"));
+        }
+    }
+
     @PutMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
         try {
