@@ -44,4 +44,6 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
             Pageable pageable
     );
 
+    boolean existsByIdAndEnabledTrueAndDeletedFalse(UUID categoryId);
+
 }

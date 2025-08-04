@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
             category.setImageUrl(imagePath);  // Asignamos la ruta de la imagen a la sucursal
         } else {
             // Si no se recibe imagen, asignamos la imagen predeterminada desde el directorio de recursos
-            category.setImageUrl("static/IMG_categories/logo-category-default.png");
+            category.setImageUrl("static/IMG_categories/logo-categoría-default.png");
         }
 
         Category savedCategory = repository.save(category);
