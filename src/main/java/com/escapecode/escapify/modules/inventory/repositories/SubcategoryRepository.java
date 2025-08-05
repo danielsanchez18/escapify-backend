@@ -39,7 +39,7 @@ public interface SubcategoryRepository extends JpaRepository<Subcategory, UUID> 
     Page<Subcategory> search(
             @Param("name") String name,
             @Param("sku") String sku,
-            @Param("categoryId") UUID branchId,
+            @Param("categoryId") UUID categoryId,
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
             @Param("enabled") Boolean enabled,

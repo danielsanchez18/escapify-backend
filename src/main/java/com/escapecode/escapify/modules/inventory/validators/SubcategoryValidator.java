@@ -36,7 +36,7 @@ public class SubcategoryValidator {
         }
 
         // 2. Validar que la categoría exista y esté activa
-        if (dto.getCategoryId() == null || subcategoryRepository.existsByIdAndEnabledTrueAndDeletedFalse(dto.getCategoryId())) {
+        if (dto.getCategoryId() == null || !categoryRepository.existsByIdAndEnabledTrueAndDeletedFalse(dto.getCategoryId())) {
             throw new IllegalArgumentException("La categoría a la que pertenece la subcategoría no existe o no está activa.");
         }
 
@@ -64,7 +64,7 @@ public class SubcategoryValidator {
         Subcategory subcategory = subcategoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("La subcategoría con ese ID no existe."));
 
-        if (Boolean.TRUE.equals(dto.getDeleted())) {
+        if (Boolean.TRUE.equals(subcategory.getDeleted())) {
             throw new IllegalArgumentException("No se puede actualizar una subcategoría eliminada.");
         }
 
@@ -91,8 +91,8 @@ public class SubcategoryValidator {
         }
 
         // 4. Validar nombre único en la misma categoría
-        Optional<Subcategory> existingSubcategory = subcategoryRepository.findByNameAndCategoryIdAndDeletedFalse(name, categoryId);
-        if (existingSubcategory.isPresent() && !existingSubcategory.get().getId().equals(id)) {
+        Optional<Subcategory> existingName = subcategoryRepository.findByNameAndCategoryIdAndDeletedFalse(name, categoryId);
+        if (existingName.isPresent() && !existingName.get().getId().equals(id)) {
             throw new IllegalArgumentException("Ya existe una subcategoría con ese nombre en la misma categoría.");
         }
 
