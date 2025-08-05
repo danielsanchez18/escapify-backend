@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO getById(UUID id) {
         return repository.findById(id)
                 .map(mapper::toDTO)
-                .orElseThrow(() -> new IllegalArgumentException("Subcategoría no encontrada"));
+                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
     }
 
     @Override

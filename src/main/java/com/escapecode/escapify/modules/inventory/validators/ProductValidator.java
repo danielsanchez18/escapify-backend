@@ -57,8 +57,8 @@ public class ProductValidator {
     1. Validar que el producto exista, no esté eliminado y esté activo.
     2. Validar que los campos obligatorios no sean nulos o vacíos.
     3. Validar que la subcategoría a la que pertenece exista o esté activa ('enabled = true' y 'deleted = false').
-    4. Validar que el nombre no se repita en una misma subcategoría (solo se puede repetir si una subcategoría está marcada como 'deleted').
-    5. Validar que el sku no se repita en una misma subcategoría (solo se puede repetir si una subcategoría está marcada como 'deleted'). */
+    4. Validar que el nombre no se repita en una misma subcategoría (solo se puede repetir si un producto está marcado como 'deleted').
+    5. Validar que el sku no se repita en una misma subcategoría (solo se puede repetir si un producto está marcado como 'deleted'). */
 
     public void validateUpdate(UUID id, ProductDTO dto) {
 
@@ -67,11 +67,11 @@ public class ProductValidator {
                 .orElseThrow(() -> new IllegalArgumentException("El producto con ese ID no existe."));
 
         if (Boolean.TRUE.equals(product.getDeleted())) {
-            throw new IllegalArgumentException("No se puede actualizar una subcategoría eliminada.");
+            throw new IllegalArgumentException("No se puede actualizar un producto eliminado.");
         }
 
         if (Boolean.FALSE.equals(product.getEnabled())) {
-            throw new IllegalArgumentException("La subcategoría no está activa.");
+            throw new IllegalArgumentException("El producto no está activo.");
         }
 
         // 2. Validar campos obligatorios
