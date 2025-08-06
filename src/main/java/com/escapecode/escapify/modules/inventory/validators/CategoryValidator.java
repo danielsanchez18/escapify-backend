@@ -24,7 +24,7 @@ public class CategoryValidator {
     1. Validar que los campos obligatorios no sean nulos o vacíos.
     2. Validar que la sucursal a la que pertenece exista o esté activa ('enabled = true' y 'deleted = false').
     3. Validar que el nombre no se repita en una misma sucursal (solo se puede repetir si una sucursal está marcada como 'deleted').
-    4. Validar que el sku no se repita en una misma sucursal (solo se puede repetir si una sucursal está marcada como 'deleted'). */
+    4. Validar que el sku no se repita en una misma sucursal. */
 
     public void validateCreate(CategoryDTO dto) {
 
@@ -47,7 +47,7 @@ public class CategoryValidator {
         }
 
         // 4. Validar sku único en la misma sucursal
-        if (categoryRepository.existsBySkuAndBranchIdAndDeletedFalse(dto.getSku(), dto.getBranchId())) {
+        if (categoryRepository.existsBySkuAndBranchId(dto.getSku(), dto.getBranchId())) {
             throw new IllegalArgumentException("Ya existe una categoría con ese sku en la misma sucursal.");
         }
     }
@@ -57,7 +57,7 @@ public class CategoryValidator {
     2. Validar que los campos obligatorios no sean nulos o vacíos.
     3. Validar que la sucursal a la que pertenece exista o esté activa ('enabled = true' y 'deleted = false').
     4. Validar que el nombre no se repita en una misma sucursal (solo se puede repetir si una sucursal está marcada como 'deleted').
-    5. Validar que el sku no se repita en una misma sucursal (solo se puede repetir si una sucursal está marcada como 'deleted'). */
+    5. Validar que el sku no se repita en una misma sucursal. */
 
     public void validateUpdate(UUID id, CategoryDTO dto) {
 
@@ -97,7 +97,7 @@ public class CategoryValidator {
         }
 
         // 5. Validar sku único en la misma sucursal
-        Optional<Category> otherSku = categoryRepository.findByNameAndBranchIdAndDeletedFalse(sku, branchId);
+        Optional<Category> otherSku = categoryRepository.findBySkuAndBranchId(sku, branchId);
         if (otherSku.isPresent() && !otherSku.get().getId().equals(id)) {
             throw new IllegalArgumentException("Ya existe una categoría con ese sku en la misma sucursal.");
         }

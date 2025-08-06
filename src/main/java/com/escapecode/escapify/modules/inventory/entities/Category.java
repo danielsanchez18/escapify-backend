@@ -8,7 +8,10 @@ import lombok.Data;
 import java.util.UUID;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "categories",
+        uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"sku", "branch_id"})
+})
 @Data
 public class Category {
 
@@ -22,7 +25,7 @@ public class Category {
     @Column(length = 255)
     private String description;
 
-    @Column(length = 50, unique = true, nullable = false)
+    @Column(length = 50, unique = false, nullable = false)
     private String sku;
 
     private String imageUrl;

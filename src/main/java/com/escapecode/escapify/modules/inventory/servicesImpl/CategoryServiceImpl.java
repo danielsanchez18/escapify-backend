@@ -7,6 +7,7 @@ import com.escapecode.escapify.modules.inventory.entities.Category;
 import com.escapecode.escapify.modules.inventory.mappers.CategoryMapper;
 import com.escapecode.escapify.modules.inventory.repositories.CategoryRepository;
 import com.escapecode.escapify.modules.inventory.services.CategoryService;
+import com.escapecode.escapify.modules.inventory.utils.SkuGenerator;
 import com.escapecode.escapify.modules.inventory.validators.CategoryValidator;
 import com.escapecode.escapify.shared.services.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,18 @@ public class CategoryServiceImpl implements CategoryService {
     private BranchRepository branchRepository;
 
     @Autowired
+    private SkuGenerator skuGenerator;
+
+    @Autowired
     private FileStorageService fileStorageService;
 
     @Override
     public CategoryDTO create(CategoryDTO categoryDTO, MultipartFile image) throws IOException {
+
+        if (categoryDTO.getSku() == null || categoryDTO.getSku().isBlank()) {
+            String baseSku = skuGenerator.generateCategorySku(categoryDTO.getName());
+            categoryDTO.setSku(skuGenerator.generateUniqueCategorySku(baseSku, categoryDTO.getBranchId(), repository));
+        }
 
         validator.validateCreate(categoryDTO);
 
@@ -50,7 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
         // Si la imagen no está vacía, almacenamos la imagen
         if (image != null && !image.isEmpty()) {
             String imagePath = fileStorageService.storeImage(image, "IMG_categories");
-            category.setImageUrl(imagePath);  // Asignamos la ruta de la imagen a la sucursal
+            category.setImageUrl(imagePath);  // Asignamos la ruta de la imagen a la categoría
         } else {
             // Si no se recibe imagen, asignamos la imagen predeterminada desde el directorio de recursos
             category.setImageUrl("static/IMG_categories/logo-categoría-default.png");

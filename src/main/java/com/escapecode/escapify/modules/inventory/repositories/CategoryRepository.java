@@ -17,9 +17,11 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
     boolean existsByNameAndBranchIdAndDeletedFalse(String name, UUID branchId);
 
-    boolean existsBySkuAndBranchIdAndDeletedFalse(String sku, UUID branchId);
+    boolean existsBySkuAndBranchId(String sku, UUID branchId);
 
     Optional<Category> findByNameAndBranchIdAndDeletedFalse(String name, UUID branchId);
+
+    Optional<Category> findBySkuAndBranchId(String sku, UUID branchId);
 
     Page<Category> findAllByBranchIdAndDeletedFalse(UUID branchId, Pageable pageable);
 
