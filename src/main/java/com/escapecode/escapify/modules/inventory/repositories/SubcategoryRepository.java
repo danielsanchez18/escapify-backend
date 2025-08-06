@@ -17,14 +17,6 @@ public interface SubcategoryRepository extends JpaRepository<Subcategory, UUID> 
 
     boolean existsByIdAndEnabledTrueAndDeletedFalse(UUID categoryId);
 
-    boolean existsByNameAndCategoryIdAndDeletedFalse(String name, UUID categoryId);
-
-    boolean existsBySkuAndCategoryIdAndDeletedFalse(String sku, UUID categoryId);
-
-    Optional<Subcategory> findByNameAndCategoryIdAndDeletedFalse(String name, UUID categoryId);
-
-    Optional<Subcategory> findBySkuAndCategoryIdAndDeletedFalse(String sku, UUID categoryId);
-
     Page<Subcategory> findAllByCategoryIdAndDeletedFalse(UUID categoryId, Pageable pageable);
 
     // Consulta de búsqueda dinámica
@@ -45,5 +37,32 @@ public interface SubcategoryRepository extends JpaRepository<Subcategory, UUID> 
             @Param("enabled") Boolean enabled,
             Pageable pageable
     );
+
+    // Consulta para verificar si existe una subcategoría por nombre, categoría y sucursal
+    @Query("SELECT CASE WHEN COUNT(s) > 0 THEN true ELSE false END "
+            + "FROM Subcategory s "
+            + " WHERE s.name = :name "
+            + " AND s.category.id = :categoryId "
+            + " AND s.category.branch.id = :branchId "
+            + " AND s.deleted = false"
+    )
+    boolean existsByNameAndCategoryIdAndBranchId(String name, UUID categoryId, UUID branchId);
+
+    // Consulta para verificar si existe una subcategoría por SKU, categoría y sucursal
+    @Query("SELECT CASE WHEN COUNT(s) > 0 THEN true ELSE false END "
+            + "FROM Subcategory s "
+            + " WHERE s.sku = :sku "
+            + " AND s.category.id = :categoryId "
+            + " AND s.category.branch.id = :branchId"
+    )
+    boolean existsBySkuAndCategoryIdAndBranchId(String sku, UUID categoryId, UUID branchId);
+
+    // Consulta para verificar si existe una subcategoría por SKU y sucursal
+    @Query("SELECT CASE WHEN COUNT(s) > 0 THEN true ELSE false END "
+            + "FROM Subcategory s "
+            + "WHERE s.sku = :sku "
+            + "AND s.category.branch.id = :branchId "
+    )
+    boolean existsBySkuAndBranchId(String sku, UUID branchId);
 
 }

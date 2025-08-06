@@ -1,6 +1,7 @@
 package com.escapecode.escapify.modules.inventory.validators;
 
 import com.escapecode.escapify.modules.inventory.dto.SubcategoryDTO;
+import com.escapecode.escapify.modules.inventory.entities.Category;
 import com.escapecode.escapify.modules.inventory.entities.Subcategory;
 import com.escapecode.escapify.modules.inventory.repositories.CategoryRepository;
 import com.escapecode.escapify.modules.inventory.repositories.SubcategoryRepository;
@@ -27,6 +28,7 @@ public class SubcategoryValidator {
     4. Validar que el sku no se repita en una misma categoría (solo se puede repetir si una categoría está marcada como 'deleted'). */
 
     public void validateCreate(SubcategoryDTO dto) {
+
         // 1. Validar campos obligatorios
         if (dto.getName() == null || dto.getName().isEmpty()) {
             throw new IllegalArgumentException("El campo nombre es obligatorio.");
@@ -36,17 +38,19 @@ public class SubcategoryValidator {
         }
 
         // 2. Validar que la categoría exista y esté activa
-        if (dto.getCategoryId() == null || !categoryRepository.existsByIdAndEnabledTrueAndDeletedFalse(dto.getCategoryId())) {
-            throw new IllegalArgumentException("La categoría a la que pertenece la subcategoría no existe o no está activa.");
-        }
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .filter(cat -> Boolean.TRUE.equals(cat.getEnabled()) && Boolean.FALSE.equals(cat.getDeleted()))
+                .orElseThrow(() -> new IllegalArgumentException("La categoría no existe o no está activa."));
+
+        UUID branchId = category.getBranch().getId();
 
         // 3. Validar nombre único en la misma categoría
-        if (subcategoryRepository.existsByNameAndCategoryIdAndDeletedFalse(dto.getName(), dto.getCategoryId())) {
+        if (subcategoryRepository.existsByNameAndCategoryIdAndBranchId(dto.getName(), dto.getCategoryId(), branchId)) {
             throw new IllegalArgumentException("Ya existe una subcategoría con ese nombre en la misma categoría.");
         }
 
         // 4. Validar sku único en la misma categoría
-        if (subcategoryRepository.existsBySkuAndCategoryIdAndDeletedFalse(dto.getSku(), dto.getCategoryId())) {
+        if (subcategoryRepository.existsBySkuAndCategoryIdAndBranchId(dto.getSku(), dto.getCategoryId(), branchId)) {
             throw new IllegalArgumentException("Ya existe una subcategoría con ese sku en la misma categoría.");
         }
     }
@@ -86,20 +90,24 @@ public class SubcategoryValidator {
         }
 
         // 3. Validar que la categoría exista y esté activa
-        if (categoryId == null || !categoryRepository.existsByIdAndEnabledTrueAndDeletedFalse(categoryId)) {
-            throw new IllegalArgumentException("La categoría a la que pertenece la subcategoría no existe o no está activa.");
-        }
+        Category category = categoryRepository.findById(categoryId)
+                .filter(cat -> Boolean.TRUE.equals(cat.getEnabled()) && Boolean.FALSE.equals(cat.getDeleted()))
+                .orElseThrow(() -> new IllegalArgumentException("La categoría no existe o no está activa."));
+
+        UUID branchId = category.getBranch().getId();
 
         // 4. Validar nombre único en la misma categoría
-        Optional<Subcategory> existingName = subcategoryRepository.findByNameAndCategoryIdAndDeletedFalse(name, categoryId);
-        if (existingName.isPresent() && !existingName.get().getId().equals(id)) {
-            throw new IllegalArgumentException("Ya existe una subcategoría con ese nombre en la misma categoría.");
+        if (subcategoryRepository.existsByNameAndCategoryIdAndBranchId(name, categoryId, branchId)) {
+            if (!subcategory.getName().equalsIgnoreCase(name)) {
+                throw new IllegalArgumentException("Ya existe una subcategoría con ese nombre en la misma categoría y sucursal.");
+            }
         }
 
         // 5. Validar sku único en la misma categoría
-        Optional<Subcategory> existingSku = subcategoryRepository.findBySkuAndCategoryIdAndDeletedFalse(sku, categoryId);
-        if (existingSku.isPresent() && !existingSku.get().getId().equals(id)) {
-            throw new IllegalArgumentException("Ya existe una subcategoría con ese sku en la misma categoría.");
+        if (subcategoryRepository.existsBySkuAndCategoryIdAndBranchId(sku, categoryId, branchId)) {
+            if (!subcategory.getSku().equalsIgnoreCase(sku)) {
+                throw new IllegalArgumentException("Ya existe una subcategoría con ese SKU en la misma categoría y sucursal.");
+            }
         }
     }
 

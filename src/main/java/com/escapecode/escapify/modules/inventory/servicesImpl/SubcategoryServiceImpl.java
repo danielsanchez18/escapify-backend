@@ -7,6 +7,7 @@ import com.escapecode.escapify.modules.inventory.mappers.SubcategoryMapper;
 import com.escapecode.escapify.modules.inventory.repositories.CategoryRepository;
 import com.escapecode.escapify.modules.inventory.repositories.SubcategoryRepository;
 import com.escapecode.escapify.modules.inventory.services.SubcategoryService;
+import com.escapecode.escapify.modules.inventory.utils.SkuGenerator;
 import com.escapecode.escapify.modules.inventory.validators.SubcategoryValidator;
 import com.escapecode.escapify.shared.services.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +36,35 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    private SkuGenerator skuGenerator;
+
+    @Autowired
     private FileStorageService fileStorageService;
 
     @Override
     public SubcategoryDTO create(SubcategoryDTO subcategoryDTO, MultipartFile image) throws IOException {
 
-        validator.validateCreate(subcategoryDTO);
-
         subcategoryDTO.setEnabled(true);
         subcategoryDTO.setDeleted(false);
+
+        // Obtener la categoría a la que pertenece
+        Category category = categoryRepository.findById(subcategoryDTO.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+
+        // Generar SKU si no lo puso el admin
+        if (subcategoryDTO.getSku() == null || subcategoryDTO.getSku().isBlank()) {
+            String baseSku = skuGenerator.generateSubcategorySku(subcategoryDTO.getName());
+            subcategoryDTO.setSku(
+                    skuGenerator.generateUniqueSubcategorySku(category.getSku(), baseSku, category.getBranch().getId(), repository)
+            );
+        } else {
+            // Validar que el SKU ingresado tenga el prefijo correcto
+            if (!subcategoryDTO.getSku().startsWith(category.getSku() + "_")) {
+                throw new IllegalArgumentException("El SKU de la subcategoría debe empezar con el prefijo de la categoría: " + category.getSku() + "_");
+            }
+        }
+
+        validator.validateCreate(subcategoryDTO);
 
         Subcategory subcategory = mapper.toEntity(subcategoryDTO);
 
