@@ -7,6 +7,7 @@ import com.escapecode.escapify.modules.inventory.mappers.AttributeMapper;
 import com.escapecode.escapify.modules.inventory.repositories.AttributeRepository;
 import com.escapecode.escapify.modules.inventory.repositories.SubcategoryRepository;
 import com.escapecode.escapify.modules.inventory.services.AttributeService;
+import com.escapecode.escapify.modules.inventory.utils.SkuGenerator;
 import com.escapecode.escapify.modules.inventory.validators.AttributeValidator;
 import com.escapecode.escapify.shared.services.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +36,30 @@ public class AttributeServiceImpl implements AttributeService {
     private SubcategoryRepository subcategoryRepository;
 
     @Autowired
-    private FileStorageService fileStorageService;
+    private SkuGenerator skuGenerator;
 
     @Override
     public AttributeDTO create(AttributeDTO attributeDTO) {
 
-        validator.validateCreate(attributeDTO);
+        // Obtener la subcategoría para el SKU
+        Subcategory subcategory = subcategoryRepository.findByIdAndDeletedFalse(attributeDTO.getSubcategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Subcategoría no encontrada"));
 
+        // Generar base SKU
+        String baseSku = skuGenerator.generateAttributeSku(attributeDTO.getName());
+
+        // Generar SKU único
+        String uniqueSku = skuGenerator.generateUniqueAttributeSku(
+                subcategory.getSku(),
+                baseSku,
+                subcategory.getId(),
+                repository
+        );
+
+        attributeDTO.setSku(uniqueSku);
         attributeDTO.setDeleted(false);
+
+        validator.validateCreate(attributeDTO);
 
         Attribute attribute = mapper.toEntity(attributeDTO);
 
@@ -94,7 +111,6 @@ public class AttributeServiceImpl implements AttributeService {
         // Actualizar otros campos si se proporcionan
         if (attributeDTO.getName() != null) attribute.setName(attributeDTO.getName());
         if (attributeDTO.getDescription() != null) attribute.setDescription(attributeDTO.getDescription());
-        if (attributeDTO.getSku() != null) attribute.setSku(attributeDTO.getSku());
 
         repository.save(attribute);
         return mapper.toDTO(attribute);

@@ -1,5 +1,6 @@
 package com.escapecode.escapify.modules.inventory.utils;
 
+import com.escapecode.escapify.modules.inventory.repositories.AttributeRepository;
 import com.escapecode.escapify.modules.inventory.repositories.CategoryRepository;
 import com.escapecode.escapify.modules.inventory.repositories.ProductRepository;
 import com.escapecode.escapify.modules.inventory.repositories.SubcategoryRepository;
@@ -66,4 +67,24 @@ public class SkuGenerator {
 
         return sku;
     }
+
+    public String generateAttributeSku(String attributeName) {
+        return attributeName.trim()
+                .replaceAll("[^A-Za-z]", "")
+                .substring(0, Math.min(attributeName.length(), 3))
+                .toUpperCase();
+    }
+
+    public String generateUniqueAttributeSku(String subcategorySku, String baseSku, UUID subcategoryId, AttributeRepository repository) {
+        String sku = subcategorySku + "_" + baseSku;
+        int counter = 1;
+
+        while (repository.existsBySkuAndSubcategoryIdAndDeletedFalse(sku, subcategoryId)) {
+            sku = subcategorySku + "_" + baseSku + counter;
+            counter++;
+        }
+
+        return sku;
+    }
+
 }

@@ -84,7 +84,7 @@ public class AttributeValidator {
         }
 
         // 3. Validar que la subcategoría exista y esté activa
-        if (dto.getSubcategoryId() == null || !subcategoryRepository.existsByIdAndEnabledTrueAndDeletedFalse(dto.getSubcategoryId())) {
+        if (subcategoryId == null || !subcategoryRepository.existsByIdAndEnabledTrueAndDeletedFalse(subcategoryId)) {
             throw new IllegalArgumentException("La subcategoría a la que pertenece el atributo no existe o no está activa.");
         }
 

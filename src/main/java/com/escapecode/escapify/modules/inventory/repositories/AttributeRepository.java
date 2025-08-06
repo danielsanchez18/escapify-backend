@@ -43,4 +43,6 @@ public interface AttributeRepository extends JpaRepository<Attribute, UUID> {
             Pageable pageable
     );
 
+    boolean existsByIdAndDeletedFalse(UUID attributeId);
+
 }
