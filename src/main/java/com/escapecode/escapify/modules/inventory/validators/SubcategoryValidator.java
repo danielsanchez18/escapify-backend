@@ -102,13 +102,6 @@ public class SubcategoryValidator {
                 throw new IllegalArgumentException("Ya existe una subcategoría con ese nombre en la misma categoría y sucursal.");
             }
         }
-
-        // 5. Validar sku único en la misma categoría
-        if (subcategoryRepository.existsBySkuAndCategoryIdAndBranchId(sku, categoryId, branchId)) {
-            if (!subcategory.getSku().equalsIgnoreCase(sku)) {
-                throw new IllegalArgumentException("Ya existe una subcategoría con ese SKU en la misma categoría y sucursal.");
-            }
-        }
     }
 
 }

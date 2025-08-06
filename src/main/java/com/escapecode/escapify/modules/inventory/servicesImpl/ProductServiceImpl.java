@@ -7,6 +7,7 @@ import com.escapecode.escapify.modules.inventory.mappers.ProductMapper;
 import com.escapecode.escapify.modules.inventory.repositories.ProductRepository;
 import com.escapecode.escapify.modules.inventory.repositories.SubcategoryRepository;
 import com.escapecode.escapify.modules.inventory.services.ProductService;
+import com.escapecode.escapify.modules.inventory.utils.SkuGenerator;
 import com.escapecode.escapify.modules.inventory.validators.ProductValidator;
 import com.escapecode.escapify.shared.services.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,22 +36,37 @@ public class ProductServiceImpl implements ProductService {
     private SubcategoryRepository subcategoryRepository;
 
     @Autowired
+    private SkuGenerator skuGenerator;
+
+    @Autowired
     private FileStorageService fileStorageService;
 
     @Override
     public ProductDTO create(ProductDTO productDTO, MultipartFile image) throws IOException {
 
-        validator.validateCreate(productDTO);
+        Subcategory subcategory = subcategoryRepository.findByIdAndDeletedFalse(productDTO.getSubcategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Subcategoría no encontrada"));
 
+        String baseSku = skuGenerator.generateProductSku(productDTO.getName());
+        String uniqueSku = skuGenerator.generateUniqueProductSku(
+                subcategory.getSku(), // Usa el SKU de la subcategoría como prefijo
+                baseSku,
+                subcategory.getCategory().getBranch().getId(), // la sucursal
+                repository
+        );
+
+        productDTO.setSku(uniqueSku);
         productDTO.setEnabled(true);
         productDTO.setDeleted(false);
+
+        validator.validateCreate(productDTO);
 
         Product product = mapper.toEntity(productDTO);
 
         // Si la imagen no está vacía, almacenamos la imagen
         if (image != null && !image.isEmpty()) {
             String imagePath = fileStorageService.storeImage(image, "IMG_products");
-            product.setImageUrl(imagePath);  // Asignamos la ruta de la imagen a la sucursal
+            product.setImageUrl(imagePath);  // Asignamos la ruta de la imagen al producto
         } else {
             // Si no se recibe imagen, asignamos la imagen predeterminada desde el directorio de recursos
             product.setImageUrl("static/IMG_products/logo-producto-default.png");
@@ -92,7 +108,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
 
-        // Cambiar subcategoría si se envía un nuevo subcategoryId
+        // Cambiar la subcategoría si se envía un nuevo subcategoryId
         if (productDTO.getSubcategoryId() != null) {
             if (product.getSubcategory() == null || !product.getSubcategory().getId().equals(productDTO.getSubcategoryId()) ) {
                 Subcategory subcategory = subcategoryRepository.findById(productDTO.getSubcategoryId())
@@ -104,7 +120,6 @@ public class ProductServiceImpl implements ProductService {
         // Actualizar otros campos si se proporcionan
         if (productDTO.getName() != null) product.setName(productDTO.getName());
         if (productDTO.getDescription() != null) product.setDescription(productDTO.getDescription());
-        if (productDTO.getSku() != null) product.setSku(productDTO.getSku());
         if (productDTO.getEnabled() != null) product.setEnabled(productDTO.getEnabled());
 
         // Sí se proporciona una nueva imagen
@@ -147,7 +162,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         product.setDeleted(true);
-        product.setEnabled(false);
+        repository.save(product);
     }
 
     @Override

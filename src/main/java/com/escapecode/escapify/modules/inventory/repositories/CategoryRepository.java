@@ -21,8 +21,6 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
     Optional<Category> findByNameAndBranchIdAndDeletedFalse(String name, UUID branchId);
 
-    Optional<Category> findBySkuAndBranchId(String sku, UUID branchId);
-
     Page<Category> findAllByBranchIdAndDeletedFalse(UUID branchId, Pageable pageable);
 
     // Consulta de búsqueda dinámica
@@ -46,6 +44,6 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
             Pageable pageable
     );
 
-    boolean existsByIdAndEnabledTrueAndDeletedFalse(UUID categoryId);
+    Optional<Category> findByIdAndDeletedFalse(UUID categoryId);
 
 }

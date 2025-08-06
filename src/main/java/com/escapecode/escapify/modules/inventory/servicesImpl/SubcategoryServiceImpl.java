@@ -44,25 +44,20 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     @Override
     public SubcategoryDTO create(SubcategoryDTO subcategoryDTO, MultipartFile image) throws IOException {
 
-        subcategoryDTO.setEnabled(true);
-        subcategoryDTO.setDeleted(false);
-
-        // Obtener la categoría a la que pertenece
-        Category category = categoryRepository.findById(subcategoryDTO.getCategoryId())
+        // Obtener la categoría para acceder al SKU
+        UUID categoryId = subcategoryDTO.getCategoryId();
+        Category category = categoryRepository.findByIdAndDeletedFalse(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
 
-        // Generar SKU si no lo puso el admin
-        if (subcategoryDTO.getSku() == null || subcategoryDTO.getSku().isBlank()) {
-            String baseSku = skuGenerator.generateSubcategorySku(subcategoryDTO.getName());
-            subcategoryDTO.setSku(
-                    skuGenerator.generateUniqueSubcategorySku(category.getSku(), baseSku, category.getBranch().getId(), repository)
-            );
-        } else {
-            // Validar que el SKU ingresado tenga el prefijo correcto
-            if (!subcategoryDTO.getSku().startsWith(category.getSku() + "_")) {
-                throw new IllegalArgumentException("El SKU de la subcategoría debe empezar con el prefijo de la categoría: " + category.getSku() + "_");
-            }
-        }
+        UUID branchId = category.getBranch().getId();
+
+        // Generar SKU automáticamente
+        String baseSku = skuGenerator.generateSubcategorySku(subcategoryDTO.getName());
+        String finalSku = skuGenerator.generateUniqueSubcategorySku(category.getSku(), baseSku, branchId, repository);
+        subcategoryDTO.setSku(finalSku);
+
+        subcategoryDTO.setEnabled(true);
+        subcategoryDTO.setDeleted(false);
 
         validator.validateCreate(subcategoryDTO);
 
@@ -125,7 +120,6 @@ public class SubcategoryServiceImpl implements SubcategoryService {
         // Solo actualiza los campos no nulo del DTO
         if (subcategoryDTO.getName() != null) subcategory.setName(subcategoryDTO.getName());
         if (subcategoryDTO.getDescription() != null) subcategory.setDescription(subcategoryDTO.getDescription());
-        if (subcategoryDTO.getSku() != null) subcategory.setSku(subcategoryDTO.getSku());
         if (subcategoryDTO.getEnabled() != null) subcategory.setEnabled(subcategoryDTO.getEnabled());
 
         // Sí se proporciona una nueva imagen

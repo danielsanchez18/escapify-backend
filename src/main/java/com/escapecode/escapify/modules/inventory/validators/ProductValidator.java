@@ -98,11 +98,6 @@ public class ProductValidator {
             throw new IllegalArgumentException("Ya existe un producto con ese nombre en la misma subcategoría.");
         }
 
-        // 5. Validar sku único en la misma subcategoría
-        Optional<Product> existingSku = productRepository.findBySkuAndSubcategoryIdAndDeletedFalse(sku, subcategoryId);
-        if (existingSku.isPresent() && !existingSku.get().getId().equals(id)) {
-            throw new IllegalArgumentException("Ya existe un producto con ese sku en la misma subcategoría.");
-        }
     }
 
 }

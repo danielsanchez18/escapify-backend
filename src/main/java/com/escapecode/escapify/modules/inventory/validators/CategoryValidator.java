@@ -96,11 +96,6 @@ public class CategoryValidator {
             throw new IllegalArgumentException("Ya existe una categoría con ese nombre en la misma sucursal.");
         }
 
-        // 5. Validar sku único en la misma sucursal
-        Optional<Category> otherSku = categoryRepository.findBySkuAndBranchId(sku, branchId);
-        if (otherSku.isPresent() && !otherSku.get().getId().equals(id)) {
-            throw new IllegalArgumentException("Ya existe una categoría con ese sku en la misma sucursal.");
-        }
     }
 
 }

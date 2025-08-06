@@ -1,6 +1,7 @@
 package com.escapecode.escapify.modules.inventory.utils;
 
 import com.escapecode.escapify.modules.inventory.repositories.CategoryRepository;
+import com.escapecode.escapify.modules.inventory.repositories.ProductRepository;
 import com.escapecode.escapify.modules.inventory.repositories.SubcategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,12 +10,6 @@ import java.util.UUID;
 
 @Component
 public class SkuGenerator {
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private SubcategoryRepository subcategoryRepository;
 
     public String generateCategorySku(String name) {
         // Ejemplo: "Alimentos" -> "ALM" o "ALI"
@@ -53,6 +48,22 @@ public class SkuGenerator {
         return sku;
     }
 
+    public String generateProductSku(String productName) {
+        return productName.trim()
+                .replaceAll("[^A-Za-z]", "")
+                .substring(0, Math.min(productName.length(), 4))
+                .toUpperCase();
+    }
 
+    public String generateUniqueProductSku(String subcategorySku, String baseSku, UUID subcategoryId, ProductRepository repository) {
+        String sku = subcategorySku + "_" + baseSku;
+        int counter = 1;
 
+        while (repository.existsBySkuAndSubcategoryIdAndDeletedFalse(sku, subcategoryId)) {
+            sku = subcategorySku + "_" + baseSku + counter;
+            counter++;
+        }
+
+        return sku;
+    }
 }

@@ -44,10 +44,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO create(CategoryDTO categoryDTO, MultipartFile image) throws IOException {
 
-        if (categoryDTO.getSku() == null || categoryDTO.getSku().isBlank()) {
-            String baseSku = skuGenerator.generateCategorySku(categoryDTO.getName());
-            categoryDTO.setSku(skuGenerator.generateUniqueCategorySku(baseSku, categoryDTO.getBranchId(), repository));
-        }
+        // Generar un SKU base para la categoría usando el nombre
+        String baseSku = skuGenerator.generateCategorySku(categoryDTO.getName());
+        // Generar un SKU único para la categoría
+        categoryDTO.setSku(skuGenerator.generateUniqueCategorySku(baseSku, categoryDTO.getBranchId(), repository));
 
         validator.validateCreate(categoryDTO);
 
@@ -114,7 +114,6 @@ public class CategoryServiceImpl implements CategoryService {
         // Solo actualiza los campos no nulo del DTO
         if (categoryDTO.getName() != null) category.setName(categoryDTO.getName());
         if (categoryDTO.getDescription() != null) category.setDescription(categoryDTO.getDescription());
-        if (categoryDTO.getSku() != null) category.setSku(categoryDTO.getSku());
         if (categoryDTO.getEnabled() != null) category.setEnabled(categoryDTO.getEnabled());
 
         // Sí se proporciona una nueva imagen

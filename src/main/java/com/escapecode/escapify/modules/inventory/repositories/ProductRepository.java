@@ -46,4 +46,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             Pageable pageable
     );
 
+    boolean existsByIdAndEnabledTrueAndDeletedFalse(UUID productId);
+
+
 }

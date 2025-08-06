@@ -65,4 +65,6 @@ public interface SubcategoryRepository extends JpaRepository<Subcategory, UUID> 
     )
     boolean existsBySkuAndBranchId(String sku, UUID branchId);
 
+    Optional<Subcategory> findByIdAndDeletedFalse(UUID subcategoryId);
+
 }
