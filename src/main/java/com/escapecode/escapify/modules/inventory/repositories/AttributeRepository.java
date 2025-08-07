@@ -1,7 +1,6 @@
 package com.escapecode.escapify.modules.inventory.repositories;
 
 import com.escapecode.escapify.modules.inventory.entities.Attribute;
-import com.escapecode.escapify.modules.inventory.entities.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,11 +17,11 @@ public interface AttributeRepository extends JpaRepository<Attribute, UUID> {
 
     boolean existsByNameAndSubcategoryIdAndDeletedFalse(String name, UUID subcategoryId);
 
-    boolean existsBySkuAndSubcategoryIdAndDeletedFalse(String sku, UUID subcategoryId);
+    boolean existsBySkuAndSubcategoryId(String sku, UUID subcategoryId);
 
     Optional<Attribute> findByNameAndSubcategoryIdAndDeletedFalse(String name, UUID subcategoryId);
 
-    Optional<Attribute> findBySkuAndSubcategoryIdAndDeletedFalse(String name, UUID subcategoryId);
+    Optional<Attribute> findBySkuAndSubcategoryIdAndDeletedFalse(String sku, UUID subcategoryId);
 
     Page<Attribute> findAllBySubcategoryIdAndDeletedFalse(UUID subcategoryId, Pageable pageable);
 
@@ -45,4 +44,5 @@ public interface AttributeRepository extends JpaRepository<Attribute, UUID> {
 
     boolean existsByIdAndDeletedFalse(UUID attributeId);
 
+    Optional<Attribute> findByIdAndDeletedFalse(UUID attributeId);
 }

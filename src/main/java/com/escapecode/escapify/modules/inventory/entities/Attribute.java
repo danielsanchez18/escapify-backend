@@ -21,7 +21,7 @@ public class Attribute {
     @Column(length = 255)
     private String description;
 
-    @Column(length = 50, unique = true, nullable = false)
+    @Column(length = 50, nullable = false)
     private String sku;
 
     @ManyToOne(fetch = FetchType.LAZY)

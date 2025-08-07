@@ -48,7 +48,7 @@ public class AttributeValidator {
         }
 
         // 4. Validar sku único en la misma subcategoría
-        if (attributeRepository.existsBySkuAndSubcategoryIdAndDeletedFalse(dto.getSku(), dto.getSubcategoryId())) {
+        if (attributeRepository.existsBySkuAndSubcategoryId(dto.getSku(), dto.getSubcategoryId())) {
             throw new IllegalArgumentException("Ya existe un atributo con ese sku en la misma subcategoría.");
         }
     }
