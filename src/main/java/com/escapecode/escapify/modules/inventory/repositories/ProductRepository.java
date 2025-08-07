@@ -17,11 +17,9 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     boolean existsByNameAndSubcategoryIdAndDeletedFalse(String name, UUID subcategoryId);
 
-    boolean existsBySkuAndSubcategoryIdAndDeletedFalse(String sku, UUID subcategoryId);
+    boolean existsBySkuAndSubcategoryId(String sku, UUID subcategoryId);
 
     Optional<Product> findByNameAndSubcategoryIdAndDeletedFalse(String name, UUID subcategoryId);
-
-    Optional<Product> findBySkuAndSubcategoryIdAndDeletedFalse(String sku, UUID subcategoryId);
 
     Page<Product> findAllBySubcategoryIdAndDeletedFalse(UUID subcategoryId, Pageable pageable);
 
@@ -48,5 +46,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     boolean existsByIdAndEnabledTrueAndDeletedFalse(UUID productId);
 
+    Optional<Product> findByIdAndDeletedFalse(UUID productId);
 
 }

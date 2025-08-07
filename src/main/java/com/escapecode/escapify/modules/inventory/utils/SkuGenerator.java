@@ -1,10 +1,6 @@
 package com.escapecode.escapify.modules.inventory.utils;
 
-import com.escapecode.escapify.modules.inventory.repositories.AttributeRepository;
-import com.escapecode.escapify.modules.inventory.repositories.CategoryRepository;
-import com.escapecode.escapify.modules.inventory.repositories.ProductRepository;
-import com.escapecode.escapify.modules.inventory.repositories.SubcategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.escapecode.escapify.modules.inventory.repositories.*;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -60,7 +56,7 @@ public class SkuGenerator {
         String sku = subcategorySku + "_" + baseSku;
         int counter = 1;
 
-        while (repository.existsBySkuAndSubcategoryIdAndDeletedFalse(sku, subcategoryId)) {
+        while (repository.existsBySkuAndSubcategoryId(sku, subcategoryId)) {
             sku = subcategorySku + "_" + baseSku + counter;
             counter++;
         }
@@ -79,12 +75,30 @@ public class SkuGenerator {
         String sku = subcategorySku + "_" + baseSku;
         int counter = 1;
 
-        while (repository.existsBySkuAndSubcategoryIdAndDeletedFalse(sku, subcategoryId)) {
+        while (repository.existsBySkuAndSubcategoryId(sku, subcategoryId)) {
             sku = subcategorySku + "_" + baseSku + counter;
             counter++;
         }
 
         return sku;
+    }
+
+    public String generateSequentialVariantSku(int number) {
+        return String.format("%03d", number); // 001, 002, ...
+    }
+
+    public String generateUniqueVariantSku(String productSku, String attributeSku, UUID productId, VariantRepository repository) {
+        int counter = 1;
+        String suffix = generateSequentialVariantSku(counter);
+        String fullSku = productSku + "-" + attributeSku + "-" + suffix;
+
+        while (repository.existsBySkuAndProductId(fullSku, productId)) {
+            counter++;
+            suffix = generateSequentialVariantSku(counter);
+            fullSku = productSku + "-" + attributeSku + "-" + suffix;
+        }
+
+        return fullSku;
     }
 
 }

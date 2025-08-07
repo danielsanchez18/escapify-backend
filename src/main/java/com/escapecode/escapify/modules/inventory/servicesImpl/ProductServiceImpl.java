@@ -51,9 +51,11 @@ public class ProductServiceImpl implements ProductService {
         String uniqueSku = skuGenerator.generateUniqueProductSku(
                 subcategory.getSku(), // Usa el SKU de la subcategoría como prefijo
                 baseSku,
-                subcategory.getCategory().getBranch().getId(), // la sucursal
+                subcategory.getId(), // la sucursal
                 repository
         );
+
+        System.out.println("SKU generado: " + uniqueSku);
 
         productDTO.setSku(uniqueSku);
         productDTO.setEnabled(true);
