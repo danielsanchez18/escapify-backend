@@ -19,13 +19,13 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(length = 100, unique = true, nullable = false)
+    @Column(length = 100, nullable = false)
     private String name;
 
     @Column(length = 255)
     private String description;
 
-    @Column(length = 50, unique = false, nullable = false)
+    @Column(length = 50, nullable = false)
     private String sku;
 
     private String imageUrl;
