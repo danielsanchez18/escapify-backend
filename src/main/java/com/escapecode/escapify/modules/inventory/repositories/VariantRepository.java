@@ -46,4 +46,6 @@ public interface VariantRepository extends JpaRepository<Variant, UUID> {
 
     Page<Variant> findAllByProductIdAndDeletedFalse(UUID productId, Pageable pageable);
 
+    boolean existsByIdAndEnabledTrueAndDeletedFalse(UUID itemId);
+
 }
