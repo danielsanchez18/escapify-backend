@@ -66,11 +66,9 @@ public class UserValidator {
         if (!StringUtils.hasText(email)) throw new IllegalArgumentException("El campo email es obligatorio.");
 
         // 3. Validar que el email no esté ya registrado por otro usuario
-        User otherEmail = userRepository.findByEmail(email);
-
-        if (otherEmail != null && !otherEmail.getId().equals(dto.getId())) {
+        Optional<User> otherEmail = userRepository.findByEmail(email);
+        if (otherEmail.isPresent() && !otherEmail.get().getId().equals(id)) {
             throw new IllegalArgumentException("El email ya está registrado por otro usuario.");
-
         }
     }
 

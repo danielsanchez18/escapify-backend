@@ -86,7 +86,6 @@ public class UserServicesImpl implements UserService {
         User user = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
 
-        // Validar que el email no se repita
         if (userDTO.getName() != null) user.setName(userDTO.getName());
         if (userDTO.getLastname() != null) user.setLastname(userDTO.getLastname());
         if (userDTO.getPhoneNumber() != null) user.setPhoneNumber(userDTO.getPhoneNumber());
