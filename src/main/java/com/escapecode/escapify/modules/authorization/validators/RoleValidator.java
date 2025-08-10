@@ -67,7 +67,7 @@ public class RoleValidator {
     2. Validar que los campos obligatorios no sean nulos o vacíos.
     3. Validar que el nombre no se repita a nivel scope y scopeId (solo se puede repetir si el rol está marcado como 'deleted') */
 
-    public void validateUpdate (UUID id, RoleDTO dto) {
+    public void validateUpdate(UUID id, RoleDTO dto) {
 
         // 1. Validar que el rol exista y no esté eliminado
         Role role = roleRepository.findByIdAndDeletedFalse(id)

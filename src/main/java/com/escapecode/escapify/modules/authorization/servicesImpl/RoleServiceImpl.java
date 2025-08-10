@@ -49,6 +49,7 @@ public class RoleServiceImpl implements RoleService {
                 .map(mapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID:" + id));
     }
+
     @Override
     public Page<RoleDTO> findAll(Pageable pageable) {
         return repository.findAll(pageable)

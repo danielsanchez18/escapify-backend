@@ -22,7 +22,7 @@ public interface RoleRepository extends JpaRepository<Role, UUID> {
 
     Optional<Role> findByNameAndScopeAndScopeIdAndDeletedFalse(String name, String scope, UUID scopeId);
 
-    // Búsqueda dinámica de usuarios
+    // Búsqueda dinámica de roles
     @Query("SELECT r FROM Role r WHERE " +
             "(:name IS NULL OR r.name LIKE %:name%) " +
             "AND (:scope IS NULL OR r.scope LIKE %:scope%) " +
