@@ -40,4 +40,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByIdAndDeletedFalse(UUID id);
 
+    boolean existsByIdAndEnabledTrueAndDeletedFalse(UUID userId);
+
 }

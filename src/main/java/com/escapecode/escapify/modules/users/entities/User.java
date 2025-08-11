@@ -38,10 +38,10 @@ public class User {
     private String providerId;
 
     @Column(nullable = false)
-    private Boolean enabled = true;
+    private Boolean enabled;
 
     @Column(nullable = false)
-    private Boolean deleted = false;
+    private Boolean deleted;
 
     @Embedded
     private Audit audit = new Audit();

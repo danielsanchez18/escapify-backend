@@ -1,6 +1,5 @@
 package com.escapecode.escapify.modules.authorization.services;
 
-import com.escapecode.escapify.modules.authorization.entities.Role;
 import com.escapecode.escapify.modules.authorization.entities.RolePermission;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

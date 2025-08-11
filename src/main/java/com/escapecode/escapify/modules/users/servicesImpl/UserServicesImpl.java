@@ -1,5 +1,6 @@
 package com.escapecode.escapify.modules.users.servicesImpl;
 
+import com.escapecode.escapify.modules.authorization.services.UserRoleService;
 import com.escapecode.escapify.modules.users.dto.UserDTO;
 import com.escapecode.escapify.modules.users.entities.User;
 import com.escapecode.escapify.modules.users.mappers.UserMapper;
@@ -34,6 +35,9 @@ public class UserServicesImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @Override
     public UserDTO create(UserDTO userDTO, MultipartFile image) {
@@ -131,6 +135,10 @@ public class UserServicesImpl implements UserService {
         }
 
         existingUser.setDeleted(true);
+
+        // Eliminar roles asociados al usuario
+        userRoleService.handleUserDeletion(existingUser.getId());
+
         mapper.toDTO(repository.save(existingUser));
     }
 

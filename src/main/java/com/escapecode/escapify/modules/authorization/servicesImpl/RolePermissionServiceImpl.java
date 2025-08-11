@@ -1,6 +1,5 @@
 package com.escapecode.escapify.modules.authorization.servicesImpl;
 
-import com.escapecode.escapify.modules.authorization.entities.Role;
 import com.escapecode.escapify.modules.authorization.entities.RolePermission;
 import com.escapecode.escapify.modules.authorization.repositories.RolePermissionRepository;
 import com.escapecode.escapify.modules.authorization.services.RolePermissionService;

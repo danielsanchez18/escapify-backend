@@ -4,7 +4,9 @@ import com.escapecode.escapify.modules.authorization.dto.RoleDTO;
 import com.escapecode.escapify.modules.authorization.entities.Role;
 import com.escapecode.escapify.modules.authorization.mappers.RoleMapper;
 import com.escapecode.escapify.modules.authorization.repositories.RoleRepository;
+import com.escapecode.escapify.modules.authorization.services.RolePermissionService;
 import com.escapecode.escapify.modules.authorization.services.RoleService;
+import com.escapecode.escapify.modules.authorization.services.UserRoleService;
 import com.escapecode.escapify.modules.authorization.validators.RoleValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +29,10 @@ public class RoleServiceImpl implements RoleService {
     private RoleValidator validator;
 
     @Autowired
-    private RolePermissionServiceImpl rolePermissionService;
+    private RolePermissionService rolePermissionService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @Override
     public RoleDTO createRole(RoleDTO roleDTO) {
@@ -100,6 +105,9 @@ public class RoleServiceImpl implements RoleService {
 
         // Manejar la eliminación de permisos asociados al rol
         rolePermissionService.handleRoleDeletion(role.getId());
+
+        // Manejar la eliminación de roles de usuario asociados al rol
+        userRoleService.handleRoleDeletion(role.getId());
 
         mapper.toDTO(repository.save(role));
     }
