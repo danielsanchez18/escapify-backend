@@ -1,7 +1,6 @@
 package com.escapecode.escapify.modules.authorization.repositories;
 
 import com.escapecode.escapify.modules.authorization.entities.Role;
-import com.escapecode.escapify.modules.users.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,9 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, UUID> {
@@ -42,5 +39,7 @@ public interface RoleRepository extends JpaRepository<Role, UUID> {
     );
 
     boolean existsByIdAndEnabledTrueAndDeletedFalse(UUID permissionId);
+
+    List<Role> findByIdInAndDeletedFalse(List<UUID> ids);
 
 }

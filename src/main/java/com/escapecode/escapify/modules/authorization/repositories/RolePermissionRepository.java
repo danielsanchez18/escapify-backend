@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -28,5 +29,7 @@ public interface RolePermissionRepository extends JpaRepository<RolePermission, 
     void softDeleteByPermissionId(@Param("permissionId") UUID permissionId);
 
     Page<RolePermission> findByRoleId(UUID roleId, Pageable pageable);
+
+    List<RolePermission> findByRoleIdInAndDeletedFalse(List<UUID> roleIds);
 
 }

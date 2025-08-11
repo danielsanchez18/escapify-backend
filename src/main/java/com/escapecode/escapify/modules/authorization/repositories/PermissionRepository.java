@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,5 +31,7 @@ public interface PermissionRepository extends JpaRepository<Permission, UUID> {
             @Param("endDate") Date endDate,
             Pageable pageable
     );
+
+    List<Permission> findByIdIn(List<UUID> ids);
 
 }

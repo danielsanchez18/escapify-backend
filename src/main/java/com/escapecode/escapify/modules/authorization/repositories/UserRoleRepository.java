@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -29,5 +31,11 @@ public interface UserRoleRepository extends JpaRepository<UserRole, UUID> {
     @Query("UPDATE UserRole ur SET ur.deleted = true " +
             "WHERE ur.roleId = :roleId")
     void softDeleteByRoleId(@Param("roleId") UUID roleId);
+
+    @Query("SELECT ur FROM UserRole ur WHERE ur.userId = :userId AND ur.deleted = false")
+    List<UserRole> findByUserIdAndDeletedFalse(UUID userId);
+
+
+
 
 }
