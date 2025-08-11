@@ -26,6 +26,9 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleValidator validator;
 
+    @Autowired
+    private RolePermissionServiceImpl rolePermissionService;
+
     @Override
     public RoleDTO createRole(RoleDTO roleDTO) {
 
@@ -94,6 +97,10 @@ public class RoleServiceImpl implements RoleService {
         if (role.getDeleted()) throw new IllegalArgumentException("El rol ya está eliminado");
 
         role.setDeleted(true);
+
+        // Manejar la eliminación de permisos asociados al rol
+        rolePermissionService.handleRoleDeletion(role.getId());
+
         mapper.toDTO(repository.save(role));
     }
 
@@ -104,7 +111,7 @@ public class RoleServiceImpl implements RoleService {
 
         if (!role.getDeleted()) throw new IllegalArgumentException("El rol no está eliminado");
 
-        role.setDeleted(true);
+        role.setDeleted(false);
         mapper.toDTO(repository.save(role));
     }
 }

@@ -26,6 +26,9 @@ public class PermissionServiceImpl implements PermissionService {
     @Autowired
     private PermissionValidator validator;
 
+    @Autowired
+    private RolePermissionServiceImpl rolePermissionService;
+
     @Override
     public PermissionDTO create(PermissionDTO permissionDTO) {
         validator.validateCreate(permissionDTO);
@@ -71,6 +74,10 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public void delete(UUID id) {
         repository.findById(id).orElseThrow(() -> new RuntimeException("Permiso no encontrado"));
+
+        // Manejar la eliminación en RolePermission
+        rolePermissionService.handlePermissionDeletion(id);
+
         repository.deleteById(id);
     }
 }

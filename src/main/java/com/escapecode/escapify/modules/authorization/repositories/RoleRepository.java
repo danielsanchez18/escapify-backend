@@ -40,4 +40,7 @@ public interface RoleRepository extends JpaRepository<Role, UUID> {
             @Param("endDate") Date endDate,
             Pageable pageable
     );
+
+    boolean existsByIdAndEnabledTrueAndDeletedFalse(UUID permissionId);
+
 }
