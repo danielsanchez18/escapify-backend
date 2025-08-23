@@ -15,6 +15,7 @@ public class CompanyMapper {
         dto.setTag(company.getTag());
         dto.setPhoneNumber(company.getPhoneNumber());
         dto.setCountry(company.getCountry());
+        dto.setCurrency(company.getCurrency());
         dto.setEmail(company.getEmail());
         dto.setWebsite(company.getWebsite());
         dto.setLogoUrl(company.getLogoUrl());
@@ -32,6 +33,7 @@ public class CompanyMapper {
         company.setTag(dto.getTag());
         company.setPhoneNumber(dto.getPhoneNumber());
         company.setCountry(dto.getCountry());
+        company.setCurrency(dto.getCurrency());
         company.setEmail(dto.getEmail());
         company.setWebsite(dto.getWebsite());
         company.setLogoUrl(dto.getLogoUrl());

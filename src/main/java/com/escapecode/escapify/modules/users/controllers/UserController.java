@@ -73,10 +73,11 @@ public class UserController {
             @RequestParam(required = false) Date startDate,
             @RequestParam(required = false) Date endDate,
             @RequestParam(required = false) Boolean enabled,
+            @RequestParam(required = false) Boolean deleted,
             @PageableDefault(size = 10, page = 0) Pageable pageable
     ) {
         try {
-            Page<UserDTO> users = userService.search(fullName, email, provider, startDate, endDate, enabled, pageable);
+            Page<UserDTO> users = userService.search(fullName, email, provider, startDate, endDate, enabled, deleted, pageable);
             return ResponseEntity.ok(ResponseUtil.successResponse("Usuarios encontrados exitosamente", users));
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseUtil.errorResponse(ex.getMessage()));

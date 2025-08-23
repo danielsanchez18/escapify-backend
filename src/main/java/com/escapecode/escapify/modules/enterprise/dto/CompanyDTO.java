@@ -14,6 +14,7 @@ public class CompanyDTO {
     private String tag;
     private String phoneNumber;
     private String country;
+    private String currency;
     private String email;
     private String website;
     private String logoUrl;

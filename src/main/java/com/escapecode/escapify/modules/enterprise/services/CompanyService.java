@@ -21,9 +21,11 @@ public interface CompanyService {
             String name,
             String tag,
             String country,
+            String currency,
             Date startDate,
             Date endDate,
             Boolean enabled,
+            Boolean deleted,
             Pageable pageable
     );
 

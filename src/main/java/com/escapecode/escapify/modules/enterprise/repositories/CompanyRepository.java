@@ -26,17 +26,20 @@ public interface CompanyRepository extends JpaRepository<Company, UUID> {
             + "(:name IS NULL OR c.name LIKE %:name%) "
             + "AND (:tag IS NULL OR c.tag LIKE %:tag%) "
             + "AND (:country IS NULL OR c.country LIKE %:country%) "
+            + "AND (:currency IS NULL OR c.currency =: currency) "
             + "AND (:startDate IS NULL OR c.audit.createdAt >= :startDate) "
             + "AND (:endDate IS NULL OR c.audit.createdAt <= :endDate)"
             + "AND (:enabled IS NULL OR c.enabled = :enabled)"
-            + "AND c.deleted = false")
+            + "AND (:deleted IS NULL OR c.deleted = :deleted)")
     Page<Company> search(
             @Param("name") String name,
             @Param("tag") String tag,
             @Param("country") String country,
+            @Param("currency") String currency,
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
             @Param("enabled") Boolean enabled,
+            @Param("deleted") Boolean deleted,
             Pageable pageable
     );
 

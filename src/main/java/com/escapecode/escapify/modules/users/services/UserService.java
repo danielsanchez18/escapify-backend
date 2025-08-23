@@ -23,6 +23,7 @@ public interface UserService {
             Date startDate,
             Date endDate,
             Boolean enabled,
+            Boolean deleted,
             Pageable pageable
     );
 

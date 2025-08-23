@@ -37,6 +37,12 @@ public class CompanyValidator {
         if (!StringUtils.hasText(dto.getTag())) {
             throw new IllegalArgumentException("El campo tag es obligatorio.");
         }
+        if (!StringUtils.hasText(dto.getCountry())) {
+            throw new IllegalArgumentException("El campo country es obligatorio.");
+        }
+        if (!StringUtils.hasText(dto.getCurrency())) {
+            throw new IllegalArgumentException("El campo currency tag es obligatorio.");
+        }
 
         // 2. Nombre no repetido (excepto deleted)
         if (companyRepository.existsByNameAndDeletedFalse(dto.getName())) {

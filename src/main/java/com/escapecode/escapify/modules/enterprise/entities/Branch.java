@@ -3,9 +3,11 @@ package com.escapecode.escapify.modules.enterprise.entities;
 import com.escapecode.escapify.shared.model.Audit;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.UUID;
 
+@EntityListeners(AuditingEntityListener.class)
 @Data
 @Entity
 @Table(name = "branches")

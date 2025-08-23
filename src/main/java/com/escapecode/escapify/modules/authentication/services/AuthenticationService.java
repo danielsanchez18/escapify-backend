@@ -140,6 +140,6 @@ public class AuthenticationService {
                 .roles(roles)
                 .permissions(permissions)
                 .build();
-        }
+    }
 
 }

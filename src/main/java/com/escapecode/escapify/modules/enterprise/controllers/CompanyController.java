@@ -70,13 +70,15 @@ public class CompanyController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String tag,
             @RequestParam(required = false) String country,
+            @RequestParam(required = false) String currency,
             @RequestParam(required = false) Date startDate,
             @RequestParam(required = false) Date endDate,
             @RequestParam(required = false) Boolean enabled,
+            @RequestParam(required = false) Boolean deleted,
             @PageableDefault(size = 10, page = 0) Pageable pageable
     ) {
         try {
-            Page<CompanyDTO> companies = companyService.search(name, tag, country, startDate, endDate, enabled, pageable);
+            Page<CompanyDTO> companies = companyService.search(name, tag, country, currency, startDate, endDate, enabled, deleted, pageable);
             return ResponseEntity.ok(ResponseUtil.successResponse("Empresas encontradas exitosamente", companies));
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseUtil.errorResponse(ex.getMessage()));

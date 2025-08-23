@@ -78,8 +78,8 @@ public class UserServicesImpl implements UserService {
     }
 
     @Override
-    public Page<UserDTO> search(String fullName, String email, String provider, Date startDate, Date endDate, Boolean enabled, Pageable pageable) {
-        Page<User> users = repository.search(fullName, email, provider, startDate, endDate, enabled, pageable);
+    public Page<UserDTO> search(String fullName, String email, String provider, Date startDate, Date endDate, Boolean enabled, Boolean deleted, Pageable pageable) {
+        Page<User> users = repository.search(fullName, email, provider, startDate, endDate, enabled, deleted, pageable);
         return users.map(user -> mapper.toDTO(user));
     }
 

@@ -69,8 +69,8 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Page<CompanyDTO> search(String name, String tag, String country, Date startDate, Date endDate, Boolean enabled, Pageable pageable) {
-        Page<Company> companies = repository.search(name, tag, country, startDate, endDate, enabled, pageable);
+    public Page<CompanyDTO> search(String name, String tag, String country, String currency, Date startDate, Date endDate, Boolean enabled, Boolean deleted, Pageable pageable) {
+        Page<Company> companies = repository.search(name, tag, country, currency, startDate, endDate, enabled, deleted, pageable);
         return companies.map(company -> mapper.toDTO(company));
     }
 

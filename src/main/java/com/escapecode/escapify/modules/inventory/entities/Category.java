@@ -4,9 +4,11 @@ import com.escapecode.escapify.modules.enterprise.entities.Branch;
 import com.escapecode.escapify.shared.model.Audit;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.UUID;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "categories",
         uniqueConstraints = {

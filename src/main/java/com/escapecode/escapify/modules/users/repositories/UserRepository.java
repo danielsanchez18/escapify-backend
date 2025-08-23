@@ -27,7 +27,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             "AND (:startDate IS NULL OR u.audit.createdAt >= :startDate) " +
             "AND (:endDate IS NULL OR u.audit.createdAt <= :endDate) " +
             "AND (:enabled IS NULL OR u.enabled = :enabled) " +
-            "AND u.deleted = false")
+            "AND (:deleted IS NULL OR u.deleted = :deleted)")
     Page<User> search(
             @Param("fullName") String fullName,
             @Param("email") String email,
@@ -35,6 +35,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
             @Param("enabled") Boolean enabled,
+            @Param("deleted") Boolean deleted,
             Pageable pageable
     );
 

@@ -3,12 +3,14 @@ package com.escapecode.escapify.modules.enterprise.entities;
 import com.escapecode.escapify.shared.model.Audit;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.UUID;
 
-@Data
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "companies")
+@Data
 public class Company {
 
     @Id
@@ -26,8 +28,11 @@ public class Company {
     @Column(length = 20)
     private String phoneNumber;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String country;
+
+    @Column(length = 10, nullable = false)
+    private String currency;
 
     @Column(length = 100)
     private String email;
@@ -45,3 +50,4 @@ public class Company {
     private Audit audit = new Audit();
 
 }
+
